@@ -28,6 +28,10 @@ import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
 
+const val KEY_REVENUE="key_revenue"
+const val DESERT_SOLD="desert_sold"
+const val DESERT_TIMER="desert_timer"
+
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     private var revenue = 0
@@ -81,6 +85,15 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         // Set the TextViews to the right values
         binding.revenue = revenue
         binding.amountSold = dessertsSold
+
+        if(savedInstanceState!=null)
+        {
+            revenue=savedInstanceState.getInt(KEY_REVENUE)
+            dessertsSold =savedInstanceState.getInt(DESERT_SOLD)
+            dessertTimer.secondsCount=savedInstanceState.getInt(DESERT_TIMER)
+
+        }
+
 
         // Make sure the correct dessert is showing
         binding.dessertButton.setImageResource(currentDessert.imageId)
@@ -151,6 +164,22 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
             R.id.shareMenuButton -> onShare()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_REVENUE ,revenue)
+        outState.putInt(DESERT_SOLD ,dessertsSold)
+        outState.putInt(DESERT_TIMER ,dessertTimer.secondsCount)
+
+
+
+        Timber.i("On Save instance called")
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        Timber.i("On Save instance called")
     }
 
     /** Lifecycle Methods **/
